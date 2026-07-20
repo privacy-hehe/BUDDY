@@ -1,6 +1,3 @@
-# BUDDY
-Buddy is a programming assistant, who is created by python programming language. 
-
 <div align="center">
 
 ```text
@@ -11,7 +8,6 @@ U | __")uU |"|u| | |  _"\   |  _"\  \ \ / /
   |____/  <<\___/  |____/ u |____/ u  |_|   
  _|| \\_ (__) )(    |||_     |||_ .-,//|(_  
 (__) (__)    (__)  (__)_)   (__)_) \_) (__)
-
 
 # Buddy is a highly optimized Command Line Interface (CLI) AI assistant powered by Google's gemini-3.5-flash model. Designed to look and feel like a retro-hacker terminal. He writes code, debugs, fetches live data, and speaks his summaries out loud using native Windows audio drivers.
 
@@ -34,14 +30,14 @@ U | __")uU |"|u| | |  _"\   |  _"\  \ \ / /
 
 Buddy includes local commands that execute without using API tokens or contacting the Google servers. Type these directly into the terminal prompt:
 
-Command                     Action
-/help               Displays the list of available commands.
-/clear              Wipes the terminal history clean and redraws the UI.
-/time               Prints the current local system time.
-/weather [city]     Pings wttr.in to fetch a live, formatted weather report for the specified city.
-/mode strict        Activates Developer Mode. Turns the UI red and changes Buddy's face to [ x_x ].
-/mode normal        Returns to standard Hacker Mode. Turns the UI green and changes Buddy's face to [ o_o ].
-/exit (or quit)     Safely terminates the script, compiles your session data, and saves it to buddy_memory.json.
+Command                Action
+/help                Displays the list of available commands.
+/clear               Wipes the terminal history clean and redraws the UI.
+/time                Prints the current local system time.
+/weather [city]      Pings wttr.in to fetch a live, formatted weather report for the specified city.
+/mode strict         Activates Developer Mode. Turns the UI red and changes Buddy's face to [ x_x ].
+/mode normal         Returns to standard Hacker Mode. Turns the UI green and changes Buddy's face to [ o_o ].
+/exit (or quit)      Safely terminates the script, compiles your session data, and saves it to buddy_memory.json.
 
 
 
