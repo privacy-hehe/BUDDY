@@ -15,12 +15,6 @@ U | __")uU |"|u| | |  _"\   |  _"\  \ \ / /
 
 ** Buddy is a highly optimized Command Line Interface (CLI) AI assistant powered by Google's gemini-3.5-flash model. Designed to look and feel like a retro-hacker terminal. He writes code, debugs, fetches live data, and speaks his summaries out loud using native Windows audio drivers. **
 
-       _..._                                     
-      [ ^_^ ]                                    
-       =>B<=                                     
-      /|   |\
-
-
 ** Gemini 3.5 Brain: Powered by the official google-genai SDK for lightning-fast, highly accurate coding assistance. **
 
 ** Native OS Voice (SAPI): Utilizes win32com to plug directly into the Windows audio core. Buddy extracts a 1-sentence summary from his AI generation and reads it out loud before typing the rest of the code. **
