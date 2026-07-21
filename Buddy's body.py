@@ -1,3 +1,6 @@
+#All faces are no working in the main project make sure , only 2 are working other's are under development I am planning to connect with ai so it can react every time.
+
+
 import time
 import sys
 from rich.console import Console
