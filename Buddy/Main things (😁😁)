@@ -1,0 +1,144 @@
+# THIS IS FIRST PART OF THE MAIN CODE I HAVE REMOVED THE CODE FROM MAIN FILE
+
+
+
+
+import os
+import sys
+import time
+import datetime
+import re
+from google import genai
+from google.genai import types
+from rich.console import Console
+from rich.progress import Progress
+from rich.markdown import Markdown
+from rich.prompt import Prompt
+
+from buddy_audio import init_speaker, speak_text
+from buddy_weather import get_weather
+from buddy_memory import load_history, save_history
+from buddy_ui import slow_print, get_robot_face, refresh_ui
+
+
+
+
+
+
+console = Console()
+console.clear()
+console.print("\n[bold green]Initializing Buddy Systems...")
+
+api_key = os.environ.get('GEMINI_API_KEY')
+if not api_key:
+    api_key = Prompt.ask("[bold cyan]Enter your Gemini API Key to connect the brain")
+if not api_key or not api_key.strip():
+    console.print("[bold red]Fatal Error: No API key provided. Aborting boot sequence.")
+    sys.exit()
+
+
+mood = "neutral"
+color = "green"
+last_cmd = None
+
+
+
+client = genai.Client(api_key = api_key.strip())
+MEMORY_FILE = "buddy_memory.json"
+sys_config = "Act as Buddy, a terminal dev. Always start with a spoken summary wrapped in <voice> tags before doing anything else. Keep the rest concise."
+
+#If you want direct use change the code instead of using manual entering of api you can directly paste your api key in above section.
+
+history = load_history(MEMORY_FILE)
+chat = client.chats.create(model="gemini-3.5-flash", config=types.GenerateContentConfig(system_instruction=sys_config, temperature=0.4), history=history)
+
+console.print("[dim]Initializing Native Windows Audio Drivers...]")
+speaker = init_speaker()
+if speaker == None:
+    console.print("[bold red]Audio Driver Failed.")
+
+
+console.clear()
+with Progress(transient=True) as p:
+    p.add_task("Bypassing mainframe security...", total=None)
+    time.sleep(0.5)
+    p.add_task("Waking up Pro Buddy...", total=None)
+    time.sleep(0.5)
+
+refresh_ui(console, mood, color)
+
+while True:
+    try:
+        console.print(f"\n[bold {color}]>[/bold {color}] ", end="")
+        user_input = input()
+        user_input = user_input.strip()
+        if user_input == "":
+            continue
+
+        if user_input[0] == '/':
+            cmd = user_input.lower()
+            last_cmd = cmd
+            if cmd == '/help':
+                console.print(f"[{color}]Commands: /clear, /time, /weather [city], /mode strict, /mode normal")
+            elif cmd == '/clear':
+                refresh_ui(console, mood, color)
+            elif cmd == '/time':
+                now = datetime.datetime.now()
+                print("Current time: " + now.strftime('%H:%M:%S'))
+            elif cmd.startswith('/weather'):
+                parts = cmd.split()
+                if len(parts) > 1:
+                    city = parts[1]
+                else:
+                    city = 'London'
+                console.print(f"[{color}]Pinging weather satellites...")
+                try:
+                    print(get_weather(city))
+                    speak_text(speaker, "Weather fetched for %s." % city)
+                except:
+                    print("couldn't reach the weather API, try again in a sec")
+            elif cmd == '/mode strict':
+                mood = "error"
+                color = "red"
+                refresh_ui(console, mood, color)
+                speak_text(speaker, "Strict developer mode activated.")
+            elif cmd == '/mode normal':
+                mood = "neutral"
+                color = "green"
+                refresh_ui(console, mood, color)
+                speak_text(speaker, "Returning to normal mode.")
+            elif cmd == '/exit' or cmd == '/quit':
+                break
+            continue
+
+        if user_input.lower() == 'exit' or user_input.lower() == 'quit' or user_input.lower() == 'bye':
+            break
+
+        with console.status(f"[bold {color}]Compiling response..."):
+            response = chat.send_message(user_input)
+            if response.text:
+                ai_text = response.text
+            else:
+                ai_text = "..."
+
+        console.print(f"\n{get_robot_face(mood, color)}")
+        console.print(f"[bold {color}]Buddy:")
+        match = re.search(r'<voice>(.*?)</voice>', ai_text, re.DOTALL)
+        if match:
+            summary = match.group(1).strip()
+            body = re.sub(r'<voice>.*?</voice>', '', ai_text, flags=re.DOTALL).strip()
+        else:
+            summary = "Here is the info."
+            body = ai_text
+        console.print(f"[dim italic] {summary} \n")
+        speak_text(speaker, summary)
+        if "```" in body:
+            console.print(Markdown(body))
+        else:
+            slow_print(body)
+    except KeyboardInterrupt:
+        break
+
+print("\nSaving memory...")
+save_history(MEMORY_FILE, chat)
+print("Bye.")
