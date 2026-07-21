@@ -1,0 +1,19 @@
+import win32com.client
+
+
+def init_speaker():
+    try:
+        speaker = win32com.client.Dispatch("SAPI.SpVoice")
+        speaker.Rate = 2
+        return speaker
+    except:
+        return None
+
+
+def speak_text(speaker, text):
+    if speaker == None:
+        return
+    clean = text.replace('*', '')
+    clean = clean.replace('`', '')
+    clean = clean.replace('\x23', '')
+    speaker.Speak(clean)
