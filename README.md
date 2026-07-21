@@ -6,6 +6,7 @@
 <div align="center">
 
 ```text
+ 
  ____     _   _   ____     ____   __   __ 
 U | __")uU |"|u| | |  _"\   |  _"\  \ \ / / 
  \|  _ \/ \| |\| |/| | | | /| | | |  \ V /  
@@ -14,42 +15,47 @@ U | __")uU |"|u| | |  _"\   |  _"\  \ \ / /
  _|| \\_ (__) )(    |||_     |||_ .-,//|(_  
 (__) (__)    (__)  (__)_)   (__)_) \_) (__)
 
-# Buddy is a highly optimized Command Line Interface (CLI) AI assistant powered by Google's gemini-3.5-flash model. Designed to look and feel like a retro-hacker terminal. He writes code, debugs, fetches live data, and speaks his summaries out loud using native Windows audio drivers.
 
-# Gemini 3.5 Brain: Powered by the official google-genai SDK for lightning-fast, highly accurate coding assistance. 
+# Buddy
 
-# Native OS Voice (SAPI): Utilizes win32com to plug directly into the Windows audio core. Buddy extracts a 1-sentence summary from his AI generation and reads it out loud before typing the rest of the code. 
+Buddy is a CLI assistant I built to feel like something out of an old hacker movie — green text, a little face in the corner, that kind of thing. Under the hood it's using Google's Gemini API to actually write code, debug stuff, and answer questions, but the whole point was making it feel less like "chat with an API" and more like you've got a weird little terminal companion.
 
-# Persistent JSON Memory: Automatically saves your chat history to a local buddy_memory.json file when you exit, allowing him to remember previous context across sessions. 
+A few things it does:
 
+Talks out loud. Buddy hooks into Windows' native SAPI voice engine through `win32com`, so instead of just dumping a wall of text, it'll pull out a one-sentence summary of what it just did and read it to you before the rest prints out. Kind of unnecessary, honestly, but it's my favorite part.
 
+It remembers you between sessions — everything gets saved to a local `buddy_memory.json` file when you exit, so you're not starting from zero every time you open it back up.
 
+There's also a strict/dev mode toggle (`/mode strict`) that flips the whole UI red and changes Buddy's face to `[ x_x ]`, mostly because I thought it looked cool. Normal mode is green with `[ o_o ]`.
 
-# How to run the code for demo:
+## Setup
 
---> RUN THIS BASH CODE IN TERMINAL
+You'll need Python 3.8+, and — this only works on Windows right now because of the SAPI voice stuff.
 
-   ** python -m pip install google-genai rich requests pywin32 **
+```bash
+python -m pip install google-genai rich requests pywin32
+```
 
+You'll also need your own Gemini API key — grab one at ai.google.dev.
 
+## Commands
 
-Buddy includes local commands that execute without using API tokens or contacting the Google servers. Type these directly into the terminal prompt:
+A handful of commands run locally without touching the Gemini API at all:
 
-Command                Action
-/help                Displays the list of available commands.
-/clear               Wipes the terminal history clean and redraws the UI.
-/time                Prints the current local system time.
-/weather [city]      Pings wttr.in to fetch a live, formatted weather report for the specified city.
-/mode strict         Activates Developer Mode. Turns the UI red and changes Buddy's face to [ x_x ].
-/mode normal         Returns to standard Hacker Mode. Turns the UI green and changes Buddy's face to [ o_o ].
-/exit (or quit)      Safely terminates the script, compiles your session data, and saves it to buddy_memory.json.
+| Command | What it does |
+|---|---|
+| `/help` | Lists everything below |
+| `/clear` | Clears the terminal and redraws the UI |
+| `/time` | Prints your local system time |
+| `/weather [city]` | Pulls a quick live report from wttr.in |
+| `/mode strict` | Dev mode — red UI, `[ x_x ]` face |
+| `/mode normal` | Back to hacker mode — green UI, `[ o_o ]` face |
+| `/exit` or `quit` | Saves your session to `buddy_memory.json` and closes out |
 
+Anything else you type just gets sent straight to Gemini.
 
+## Known limitations
 
-Requirements:-
---> Python 3.8 or higher.
---> A Windows Operating System (required for the Native SAPI audio engine).
---> A valid Google Gemini API Key.
+Voice only works in English for now — haven't touched other locales yet. And obviously the SAPI piece means this won't run on Mac or Linux without swapping out the audio backend, which is on my list eventually.
 
-
-<img width="437" height="390" alt="Screenshot 2026-07-20 223231" src="https://github.com/user-attachments/assets/1962c7a4-eb79-41b4-bf98-7b9e05ed7e7c" />
+![screenshot](https://github.com/user-attachments/assets/1962c7a4-eb79-41b4-bf98-7b9e05ed7e7c)
