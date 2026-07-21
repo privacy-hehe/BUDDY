@@ -1,0 +1,28 @@
+import json
+import os
+from google.genai import types
+
+
+def load_history(memory_file):
+    history = []
+    if os.path.exists(memory_file):
+        f = open(memory_file, 'r')
+        data = json.load(f)
+        f.close()
+        for m in data:
+            role = m.get('role')
+            txt = m.get('text')
+            history.append(types.Content(role=role, parts=[types.Part.from_text(text=txt)]))
+    return history
+
+
+def save_history(memory_file, chat):
+    history_to_save = []
+    for m in chat.get_history():
+        try:
+            history_to_save.append({"role": m.role, "text": m.parts[0].text})
+        except:
+            continue
+    f = open(memory_file, 'w')
+    json.dump(history_to_save, f)
+    f.close()
