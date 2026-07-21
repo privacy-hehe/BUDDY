@@ -1,0 +1,51 @@
+import sys
+import time
+from rich.panel import Panel
+
+
+def slow_print(text, speed=0.010):
+    for char in text:
+        sys.stdout.write(char)
+        sys.stdout.flush()
+        if char == '.' or char == '!' or char == '?':
+            time.sleep(0.15)
+        elif char == ',' or char == ':' or char == ';':
+            time.sleep(0.08)
+        else:
+            time.sleep(speed)
+    print()
+#All faces are no working, only 2 are working other's are under development I am planning to connect with ai so it can react every time.
+
+def get_robot_face(mood="neutral", color="green"):
+    faces = {}
+    faces["neutral"] = "[ o_o ]"
+    faces["happy"] = "[ ^_^ ]"
+    faces["think"] = "[ -_- ]"
+    faces["shock"] = "[ O_O ]"
+    faces["error"] = "[ x_x ]"
+    if mood in faces:
+        face = faces[mood]
+    else:
+        face = faces["neutral"]
+    return f"""[bold {color}]
+   _..._ 
+  {face}
+   =>B<= 
+  /|   |\\
+ (_|___|_)
+[/bold {color}]"""
+
+
+def refresh_ui(console, mood, color):
+    console.clear()
+    line1 = f"[bold {color}]  ____     _   _   ____     ____   __   __ \n"
+    line2 = "U | __\")uU |\"|u| | |  _\"\\   |  _\"\\  \\ \\ / / \n"
+    line3 = " \\|  _ \\/ \\| |\\| |/| | | | /| | | |  \\ V /  \n"
+    line4 = "  | |_) |  | |_| |U| |_| |\\U| |_| |\\U_|\"|_u \n"
+    line5 = "  |____/  <<\\___/  |____/ u |____/ u  |_|   \n"
+    line6 = " _|| \\\\_ (__) )(    |||_     |||_ .-,//|(_  \n"
+    line7 = "(__) (__)    (__)  (__)_)   (__)_) \\_) (__)\n"
+    banner = line1 + line2 + line3 + line4 + line5 + line6 + line7 + f"[/bold {color}]\n{get_robot_face(mood, color)}"
+    console.print(Panel.fit(banner, border_style=color))
+    console.print(f"[bold {color}]>[/bold {color}] [bold white]PRO DESKTOP CONNECTION ESTABLISHED[/bold white]")
+    console.print(f"[bold {color}]>[/bold {color}] [bold white]TYPE '/help' FOR COMMANDS, 'exit' TO DISCONNECT.[/bold white]\n")
